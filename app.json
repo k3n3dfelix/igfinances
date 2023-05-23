@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "igfinances",
+    "slug": "igfinances",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
