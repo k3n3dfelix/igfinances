@@ -12,6 +12,9 @@ import {
 
 import  themes  from './src/global/styles/theme';
 
+import { NavigationContainer } from '@react-navigation/native';
+import { AppRoutes } from './src/routes/app.routes';
+
 import { Dashboard } from "./src/pages/Dashboard";
 import { Register } from "./src/pages/Register";
 import { CategorySelect } from "./src/pages/CategorySelect";
@@ -29,7 +32,9 @@ export default function App() {
   }
   return (
     <ThemeProvider theme={themes}>
-      <Register />
+      <NavigationContainer>
+        <AppRoutes />
+      </NavigationContainer>
     </ThemeProvider>
   );
 }

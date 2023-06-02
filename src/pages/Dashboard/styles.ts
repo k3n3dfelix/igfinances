@@ -2,6 +2,7 @@ import styled from "styled-components/native";
 import { FlatList } from "react-native";
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { Feather } from "@expo/vector-icons";
+import { BorderlessButton } from 'react-native-gesture-handler';
 import {
   getBottomSpace,
   getStatusBarHeight,
@@ -85,3 +86,7 @@ export const TransactionList = styled(FlatList as new () => FlatList<DataListPro
   showsVerticalScrollIndicator: false,
   contentContainerStyle: { paddingBottom: getBottomSpace() },
 })``;
+
+export const LogoutButton= styled(BorderlessButton)`
+
+`;

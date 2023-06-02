@@ -2,7 +2,10 @@ import { Text, StyleSheet } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
 import { HighlightCard } from "../../components/HighlightCard";
-import { TransactionCard, TransactionCardProps} from "../../components/TransactionCard";
+import {
+  TransactionCard,
+  TransactionCardProps,
+} from "../../components/TransactionCard";
 import {
   Container,
   Header,
@@ -17,6 +20,7 @@ import {
   Transactions,
   Title,
   TransactionList,
+  LogoutButton
 } from "./styles";
 
 export interface DataListProps extends TransactionCardProps {
@@ -24,24 +28,24 @@ export interface DataListProps extends TransactionCardProps {
 }
 export function Dashboard() {
   const data: DataListProps[] = [
-    { 
-      id: '1',
-      type: 'positive',
+    {
+      id: "1",
+      type: "positive",
       title: "Desenvolvimento de site",
       amount: "R$ 12.000,00",
       category: { name: "Venda", icon: "dollar-sign" },
       date: "28/05/2023",
     },
     {
-      id: '2',
-      type: 'negative',
+      id: "2",
+      type: "negative",
       title: "Hamburgueria Pizzy",
       amount: "R$ 12.000,00",
       category: { name: "Alimentação", icon: "coffee" },
       date: "28/05/2023",
     },
-    { 
-      id: '3',
+    {
+      id: "3",
       type: "negative",
       title: "Aluguel do apartamento",
       amount: "R$ 1200,00",
@@ -65,7 +69,9 @@ export function Dashboard() {
               <UserName>Kened</UserName>
             </User>
           </UserInfo>
-          <Icon name="power"></Icon>
+          <LogoutButton onPress={() => {}}>
+            <Icon name="power"></Icon>
+          </LogoutButton>
         </UserWrapper>
       </Header>
       <HighlightCards>
@@ -92,7 +98,7 @@ export function Dashboard() {
         <Title>Listagem</Title>
         <TransactionList
           data={data}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           renderItem={({ item }) => <TransactionCard data={item} />}
         />
       </Transactions>
