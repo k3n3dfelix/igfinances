@@ -12,7 +12,9 @@ import {
 
 import  themes  from './src/global/styles/theme';
 
-import { Dashboard } from "./src/pages/Dashboard/index";
+import { Dashboard } from "./src/pages/Dashboard";
+import { Register } from "./src/pages/Register";
+import { CategorySelect } from "./src/pages/CategorySelect";
 
 export default function App() {
 
@@ -27,7 +29,7 @@ export default function App() {
   }
   return (
     <ThemeProvider theme={themes}>
-      <Dashboard />
+      <Register />
     </ThemeProvider>
   );
 }
