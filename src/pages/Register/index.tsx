@@ -28,6 +28,7 @@ interface FormData {
   id: string;
   name: string;
   amount: string;
+  type: string;
 }
 type NavigationProps = {
   navigate:(screen:string) => void;
@@ -67,7 +68,7 @@ export function Register() {
   function handleCloseSelectCategoryModal() {
     setCategoryModalOpen(false);
   }
-  function handleTransactionTypeSelect(type: "up" | "down") {
+  function handleTransactionTypeSelect(type: "positive" | "negative") {
     setTransactionType(type);
   }
 
@@ -81,7 +82,7 @@ export function Register() {
       id: String(uuid.v4()),
       name: form.name,
       amount: form.amount,
-      transactionType,
+      type: transactionType,
       category: category.key,
       date: new Date(),
     };
@@ -121,7 +122,7 @@ export function Register() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Container>
         <Header>
-          <Title>Cadastros</Title>
+          <Title>Cadastro</Title>
         </Header>
         <Form>
           <Fields>
@@ -145,14 +146,14 @@ export function Register() {
               <TransactionTypeButton
                 type="up"
                 title="Income"
-                isActive={transactionType === "up"}
-                onPress={() => handleTransactionTypeSelect("up")}
+                isActive={transactionType === "positive"}
+                onPress={() => handleTransactionTypeSelect("positive")}
               />
               <TransactionTypeButton
                 type="down"
                 title="Outcome"
-                isActive={transactionType === "down"}
-                onPress={() => handleTransactionTypeSelect("down")}
+                isActive={transactionType === "negative"}
+                onPress={() => handleTransactionTypeSelect("negative")}
               />
             </TransactionsTypes>
             <CategorySelectButton
