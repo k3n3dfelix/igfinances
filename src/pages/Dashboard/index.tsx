@@ -4,7 +4,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
 
-import { useTheme } from 'styled-components';
+import { useTheme } from "styled-components";
 
 import { HighlightCard } from "../../components/HighlightCard";
 import {
@@ -35,7 +35,7 @@ export interface DataListProps extends TransactionCardProps {
 
 interface HighlightProps {
   amount: string;
-  // lastTransaction: string;
+  lastTransaction: string;
 }
 
 interface HighlightData {
@@ -53,24 +53,54 @@ export function Dashboard() {
 
   const theme = useTheme();
 
-  function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative'){
+  // function getLastTransactionDate(collection: DataListProps[], type: 'positive' | 'negative'){
 
-    const lastTransaction = 
-    Math.max.apply(Math,collection
-      .filter(transaction => transaction.type === type)
-      .map(transaction => new Date(transaction.date).getTime()));
+  //   const lastTransaction =
+  //   Math.max.apply(Math,collection
+  //     .filter(transaction => transaction.type === type)
+  //     .map(transaction => new Date(transaction.date).getTime()));
+  //    return Intl.DateTimeFormat("pt-BR", {
+  //       day: "2-digit",
+  //       month: "2-digit",
+  //       year: "2-digit",
+  //     }).format(new Date(lastTransaction));
 
-     return Intl.DateTimeFormat("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "2-digit",
-      }).format(new Date(lastTransaction));
+  // }
+
+  function getLastTransactionDate(
+    collection: DataListProps[],
+    type: "positive" | "negative"
+  ) {
+    const filteredTransactions = collection.filter(
+      (transaction) => transaction.type === type
+    );
+
+    if (filteredTransactions.length === 0) {
+      return "Nenhuma transação encontrada";
+    }
+
+    const lastTransaction = new Date(
+      Math.max.apply(
+        Math,
+        filteredTransactions.map((transaction) =>
+          new Date(transaction.date).getTime()
+        )
+      )
+    );
+    return`${lastTransaction.getDate()} de ${lastTransaction.toLocaleString('pt-BR', {month: 'long'})}`; 
   }
 
   async function loadTransactions() {
     const dataKey = "@igfinances:transactions";
-    const response = await AsyncStorage.getItem(dataKey);
-    const transactions = response ? JSON.parse(response) : [];
+    let transactions = [];
+    try {
+      const response = await AsyncStorage.getItem(dataKey);
+      console.log("response", response);
+      transactions = response ? JSON.parse(response) : [];
+    } catch (error) {
+      console.log("error", error);
+    }
+
     let entriesTotal = 0;
     let expensiveTotal = 0;
 
@@ -107,9 +137,17 @@ export function Dashboard() {
 
     setTransactions(transactionsFormatted);
 
-    const lastTransactionEntries = getLastTransactionDate(transactions, 'positive');
-    const lastTransactionExpensives = getLastTransactionDate(transactions, 'negative');
-    console.log('lastTransactionEntries', lastTransactionEntries);
+    const lastTransactionEntries = getLastTransactionDate(
+      transactions,
+      "positive"
+    );
+    const lastTransactionExpensives = getLastTransactionDate(
+      transactions,
+      "negative"
+    );
+    const totalInterval = `01 a ${lastTransactionExpensives}`;
+
+    console.log("lastTransactionEntries", lastTransactionEntries);
     const total = entriesTotal - expensiveTotal;
 
     setHighlightData({
@@ -118,23 +156,21 @@ export function Dashboard() {
           style: "currency",
           currency: "BRL",
         }),
-        // lastTransaction: lastTransactionEntries,
+        lastTransaction: `Última entrada dia ${lastTransactionEntries}`,
       },
       expensives: {
         amount: expensiveTotal.toLocaleString("pt-BR", {
           style: "currency",
           currency: "BRL",
         }),
-        // lastTransaction: lastTransactionExpensives,
+        lastTransaction: `Última saída dia ${lastTransactionExpensives}` ,
       },
       total: {
         amount: total.toLocaleString("pt-BR", {
           style: "currency",
           currency: "BRL",
-          
         }),
-        // lastTransaction: ''
-       
+        lastTransaction: totalInterval,
       },
     });
 
@@ -143,7 +179,11 @@ export function Dashboard() {
 
   useFocusEffect(
     useCallback(() => {
-      loadTransactions();
+      try {
+        loadTransactions();
+      } catch (error) {
+        console.log("erro", error);
+      }
     }, [])
   );
   console.log("highlightData", highlightData);
@@ -151,7 +191,10 @@ export function Dashboard() {
     <Container>
       {isLoading ? (
         <LoadContainer>
-          <ActivityIndicator color={theme.colors.primary} size="large"></ActivityIndicator>
+          <ActivityIndicator
+            color={theme.colors.primary}
+            size="large"
+          ></ActivityIndicator>
         </LoadContainer>
       ) : (
         <>
@@ -177,19 +220,19 @@ export function Dashboard() {
             <HighlightCard
               title="Entradas"
               amount={highlightData.entries.amount}
-              lastTransaction="erwrwer"
+              lastTransaction={highlightData.entries.lastTransaction}
               type="up"
             />
             <HighlightCard
               title="Saídas"
               amount={highlightData.expensives.amount}
-              lastTransaction="dsfgsdgsd"
+              lastTransaction={highlightData.expensives.lastTransaction}
               type="down"
             />
             <HighlightCard
               title="Total"
               amount={highlightData.total.amount}
-              lastTransaction="01 à 16 de abril"
+              lastTransaction={highlightData.total.lastTransaction}
               type="total"
             />
           </HighlightCards>
