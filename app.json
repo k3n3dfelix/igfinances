@@ -2,6 +2,8 @@
   "expo": {
     "name": "igfinances",
     "slug": "igfinances",
+    "scheme": "igfinances",
+    "owner": "ksfelix",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
